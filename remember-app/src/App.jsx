@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Textarea, Button, Group, List, Container } from '@mantine/core';
+import { createTheme, MantineProvider, Textarea, Button, Group, List, Container, ThemeIcon } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
-
+import { IconArrowRight } from '@tabler/icons-react';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -19,7 +19,7 @@ function App() {
         remember: '',
         date: null
       });
-  const [items, setItem] = useState([]);
+  const [items, setItems] = useState([]);
   
   const handleRememberChange = (e) => {
     setRemForm({ ...remForm, remember: e.target.value });
@@ -28,10 +28,10 @@ function App() {
     setRemForm({ ...remForm, date: e.target.value });
   };
 
-  const rememberItems = items.map((item) => <List.Item key={item.id}> {item.remember} at {item.date} </List.Item>);
+  const rememberItems = items.map((item) => <List.Item key={item.Code}> {item.Title} at {item.Date} </List.Item>);
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'controlled',
     initialValues: {
       inputRemember: '',
     },
@@ -41,22 +41,51 @@ function App() {
     },
   });
 
+    useEffect(() => {
+      fetch('https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/GetList_Memory')
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setItems(data);
+        });
+    }, []);
+  
   return (
         
     <MantineProvider theme={theme}>
       <Container>
-        
+
         <form onSubmit={form.onSubmit(function (values) { 
+            //e.preventDefault();
             console.log(values);
             items.push({
               id: nextId++,
               remember: values.inputRemember,
             });
+
+            setRemForm( { id:0, remember:'', date:null } );
+            
+            fetch('https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory', {
+               method: 'POST',
+               body: JSON.stringify({
+                Date: "2024-12-31",
+                Title: values.inputRemember,
+                Description: "",
+              }),
+               headers: {
+                  'Content-type': 'application/json; charset=UTF-8',
+               },
+            })
+
           })}>
+
           <Textarea
             label="What to remember"
             placeholder="What to remember"
             key={form.key('inputRemember')}
+            value={remForm.remember}
             onChange={handleRememberChange}
             {...form.getInputProps('inputRemember')}
           />
@@ -65,6 +94,7 @@ function App() {
             label="Pick date"
             placeholder="Pick date"
             key={form.key('date')}
+            value={remForm.date}
             onChange={handleDateChange}
             {...form.getInputProps('date')}
           />
@@ -74,7 +104,12 @@ function App() {
           </Group>
         </form>
 
-        <List>
+        <List 
+          spacing="xs"
+          size="sm"
+          center
+          icon={ <IconArrowRight style={{ width: 16, height: 16 }} />
+        }>
           {rememberItems}
         </List>
       </Container>
