@@ -7,26 +7,31 @@ import { IconArrowRight } from "@tabler/icons-react";
 
 let nextId = 0;
 
-function App() {
-  const [remForm, setRemForm] = useState({
-    id: 0,
-    remember: "",
-    date: null,
-  });
-  const [items, setItems] = useState([]);
+type Memory = {
+  id: number;
+  title: string;
+};
 
-  const handleRememberChange = (e) => {
-    setRemForm({ ...remForm, remember: e.target.value });
+function App() {
+  const [memoryForm, setmemoryForm] = useState<Memory>();
+  const [items, setItems] = useState<Memory[]>([]);
+
+  const handleRememberChange = (e: { target: { value: string } }) => {
+    let mem: Memory = {
+      id: 0,
+      title: e.target.value,
+    };
+
+    setmemoryForm({ ...memoryForm, mem });
   };
-  const handleDateChange = (e) => {
+
+  /*
+  const handleDateChange = (e: { target: { value: any } }) => {
     setRemForm({ ...remForm, date: e.target.value });
   };
-
-  const rememberItems = items.map((item) => (
-    <List.Item key={item.Code}>
-      {" "}
-      {item.Title} at {item.Date}{" "}
-    </List.Item>
+  */
+  const rememberItems = items.map((item: Memory) => (
+    <List.Item key={item.id}>{item.title}</List.Item>
   ));
 
   const form = useForm({
@@ -60,12 +65,10 @@ function App() {
         onSubmit={form.onSubmit(function (values) {
           //e.preventDefault();
           console.log(values);
-          items.push({
-            id: nextId++,
-            remember: values.inputRemember,
-          });
 
-          setRemForm({ id: 0, remember: "", date: null });
+          let mem: Memory = { id: nextId++, title: values.inputRemember };
+          items.push(mem);
+          setRemForm(mem);
 
           fetch(
             "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
@@ -87,18 +90,9 @@ function App() {
           label="What to remember"
           placeholder="What to remember"
           key={form.key("inputRemember")}
-          value={remForm.remember}
+          value={remForm.title}
           onChange={handleRememberChange}
           {...form.getInputProps("inputRemember")}
-        />
-
-        <DatePickerInput
-          label="Pick date"
-          placeholder="Pick date"
-          key={form.key("date")}
-          value={remForm.date}
-          onChange={handleDateChange}
-          {...form.getInputProps("date")}
         />
 
         <Group justify="flex-end" mt="md">
