@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Container, MantineProvider } from "@mantine/core";
-import { theme } from "./theme/theme.js";
+import { theme } from "./theme/theme";
 
 import App from "./App.js";
 
