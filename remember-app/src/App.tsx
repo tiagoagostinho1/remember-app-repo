@@ -10,26 +10,33 @@ let nextId = 0;
 type Memory = {
   id: number;
   title: string;
+  date?: Date;
 };
 
 function App() {
-  const [memoryForm, setmemoryForm] = useState<Memory>();
+  const [memoryForm, setMemoryForm] = useState<Memory>();
   const [items, setItems] = useState<Memory[]>([]);
 
   const handleRememberChange = (e: { target: { value: string } }) => {
+    nextId++;
     let mem: Memory = {
-      id: 0,
+      id: nextId,
       title: e.target.value,
+      date: new Date(),
     };
-
-    setmemoryForm({ ...memoryForm, mem });
+    setMemoryForm(mem);
   };
-
   /*
   const handleDateChange = (e: { target: { value: any } }) => {
-    setRemForm({ ...remForm, date: e.target.value });
+    let mem: Memory = {
+      id: nextId,
+      title: e.target.value,
+      date: new Date(),
+    };
+
+    setMemoryForm({ ...remForm, date: e.target.value });
   };
-  */
+*/
   const rememberItems = items.map((item: Memory) => (
     <List.Item key={item.id}>{item.title}</List.Item>
   ));
@@ -68,7 +75,7 @@ function App() {
 
           let mem: Memory = { id: nextId++, title: values.inputRemember };
           items.push(mem);
-          setRemForm(mem);
+          setMemoryForm(mem);
 
           fetch(
             "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
@@ -90,9 +97,9 @@ function App() {
           label="What to remember"
           placeholder="What to remember"
           key={form.key("inputRemember")}
-          value={remForm.title}
-          onChange={handleRememberChange}
+          value={memoryForm?.title}
           {...form.getInputProps("inputRemember")}
+          onChange={(e) => handleRememberChange(e)}
         />
 
         <Group justify="flex-end" mt="md">
