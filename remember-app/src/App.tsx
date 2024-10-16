@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import "@mantine/core/styles.css";
 import { Textarea, Button, Group, List } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+import { DatePicker, DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconArrowRight } from "@tabler/icons-react";
+import "@mantine/dates/styles.css";
+import "@mantine/core/styles.css";
 
 let nextId = 0;
 
@@ -14,24 +15,43 @@ type Memory = {
 };
 
 function App() {
-  const [memoryForm, setMemoryForm] = useState<Memory>();
+  //const [memoryForm, setMemoryForm] = useState<Memory>();
   const [items, setItems] = useState<Memory[]>([]);
-
-  const rememberItems = items.map((item: Memory) => (
-    <List.Item key={item.code}>{item.title}</List.Item>
-  ));
-
   const form = useForm({
-    mode: "controlled",
+    mode: "uncontrolled",
     initialValues: {
       inputRemember: "",
     },
-
     validate: {
       inputRemember: (value) =>
         value.length < 2 ? "Write at leat 2 chars" : null,
     },
   });
+
+  const onFormSubmit = function (values: any) {
+    //e.preventDefault();
+    console.log(values);
+
+    let mem: Memory = {
+      code: "",
+      title: values.inputRemember,
+      date: new Date(),
+    };
+
+    items.push(mem);
+    setMemoryForm(mem);
+
+    fetch(
+      "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
+      {
+        method: "POST",
+        body: JSON.stringify(mem),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     fetch(
@@ -55,38 +75,19 @@ function App() {
 
   return (
     <>
-      <form
-        onSubmit={form.onSubmit(function (values) {
-          //e.preventDefault();
-          console.log(values);
-
-          let mem: Memory = {
-            code: "",
-            title: values.inputRemember,
-            date: new Date(),
-          };
-
-          items.push(mem);
-          setMemoryForm(mem);
-
-          fetch(
-            "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
-            {
-              method: "POST",
-              body: JSON.stringify(mem),
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-              },
-            }
-          );
-        })}
-      >
+      <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Textarea
           label="What to remember"
           placeholder="What to remember"
           key={form.key("inputRemember")}
-          value={memoryForm?.title}
+          //value={memoryForm?.title}
           {...form.getInputProps("inputRemember")}
+        />
+        <DatePicker
+          key={form.key("datePickerRemember")}
+          defaultDate={new Date()}
+          //value={memoryForm?.date}
+          {...form.getInputProps("datePickerRemember")}
         />
 
         <Group justify="flex-end" mt="md">
