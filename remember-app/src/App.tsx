@@ -8,7 +8,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 let nextId = 0;
 
 type Memory = {
-  id: number;
+  code: string;
   title: string;
   date?: Date;
 };
@@ -17,28 +17,8 @@ function App() {
   const [memoryForm, setMemoryForm] = useState<Memory>();
   const [items, setItems] = useState<Memory[]>([]);
 
-  const handleRememberChange = (e: { target: { value: string } }) => {
-    nextId++;
-    let mem: Memory = {
-      id: nextId,
-      title: e.target.value,
-      date: new Date(),
-    };
-    setMemoryForm(mem);
-  };
-  /*
-  const handleDateChange = (e: { target: { value: any } }) => {
-    let mem: Memory = {
-      id: nextId,
-      title: e.target.value,
-      date: new Date(),
-    };
-
-    setMemoryForm({ ...remForm, date: e.target.value });
-  };
-*/
   const rememberItems = items.map((item: Memory) => (
-    <List.Item key={item.id}>{item.title}</List.Item>
+    <List.Item key={item.code}>{item.title}</List.Item>
   ));
 
   const form = useForm({
@@ -61,8 +41,15 @@ function App() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
-        setItems(data);
+        const memories = data.map((dataItem: any) => {
+          let newMemories: Memory = {
+            code: dataItem.Code,
+            title: dataItem.Title,
+            date: dataItem.Date,
+          };
+          return newMemories;
+        });
+        setItems(memories);
       });
   }, []);
 
@@ -73,7 +60,12 @@ function App() {
           //e.preventDefault();
           console.log(values);
 
-          let mem: Memory = { id: nextId++, title: values.inputRemember };
+          let mem: Memory = {
+            code: "",
+            title: values.inputRemember,
+            date: new Date(),
+          };
+
           items.push(mem);
           setMemoryForm(mem);
 
@@ -81,11 +73,7 @@ function App() {
             "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
             {
               method: "POST",
-              body: JSON.stringify({
-                Date: "2024-12-31",
-                Title: values.inputRemember,
-                Description: "",
-              }),
+              body: JSON.stringify(mem),
               headers: {
                 "Content-type": "application/json; charset=UTF-8",
               },
@@ -99,7 +87,6 @@ function App() {
           key={form.key("inputRemember")}
           value={memoryForm?.title}
           {...form.getInputProps("inputRemember")}
-          onChange={(e) => handleRememberChange(e)}
         />
 
         <Group justify="flex-end" mt="md">
@@ -113,7 +100,9 @@ function App() {
         center
         icon={<IconArrowRight style={{ width: 16, height: 16 }} />}
       >
-        {rememberItems}
+        {items.map((item: Memory) => (
+          <List.Item key={item.code}>{item.title}</List.Item>
+        ))}
       </List>
     </>
   );
