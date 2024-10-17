@@ -15,32 +15,24 @@ type Memory = {
 };
 
 function App() {
-  //const [memoryForm, setMemoryForm] = useState<Memory>();
   const [items, setItems] = useState<Memory[]>([]);
-  const form = useForm({
-    mode: "uncontrolled",
-    initialValues: {
-      inputRemember: "",
-    },
-    validate: {
-      inputRemember: (value) =>
-        value.length < 2 ? "Write at leat 2 chars" : null,
-    },
+
+  const form = useForm<Memory>({
+    mode: "controlled",
+    initialValues: { code: "", title: "", date: new Date() },
   });
 
-  const onFormSubmit = function (values: any) {
+  const onFormSubmit = function (formSubmittedValues: Memory) {
     //e.preventDefault();
-    console.log(values);
+    console.log(formSubmittedValues);
 
     let mem: Memory = {
       code: "",
-      title: values.inputRemember,
-      date: new Date(),
+      title: formSubmittedValues.title,
+      date: formSubmittedValues.date,
     };
 
     items.push(mem);
-    setMemoryForm(mem);
-
     fetch(
       "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
       {
@@ -77,17 +69,14 @@ function App() {
     <>
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Textarea
+          {...form.getInputProps("title")}
           label="What to remember"
           placeholder="What to remember"
-          key={form.key("inputRemember")}
-          //value={memoryForm?.title}
-          {...form.getInputProps("inputRemember")}
         />
-        <DatePicker
-          key={form.key("datePickerRemember")}
-          defaultDate={new Date()}
-          //value={memoryForm?.date}
-          {...form.getInputProps("datePickerRemember")}
+        <DatePickerInput
+          {...form.getInputProps("date")}
+          label="Pick date"
+          placeholder="Pick date"
         />
 
         <Group justify="flex-end" mt="md">
