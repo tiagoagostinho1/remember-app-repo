@@ -12,7 +12,7 @@ type Memory = {
   date?: Date;
 };
 
-function RememberForm() {
+export function RememberForm() {
   const [items, setItems] = useState<Memory[]>([]);
 
   const form = useForm<Memory>({
@@ -97,5 +97,3 @@ function RememberForm() {
     </>
   );
 }
-
-export default RememberForm;
