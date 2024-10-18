@@ -4,7 +4,6 @@ import { RememberForm } from "./components/RememberForm";
 function App() {
   return (
     <>
-      <HeaderMegaMenu />
       <RememberForm />
     </>
   );
