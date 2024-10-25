@@ -4,15 +4,13 @@ import { Container, MantineProvider } from "@mantine/core";
 import { theme } from "./theme/theme";
 
 import { App } from "./App";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "./Router";
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <MantineProvider theme={theme}>
     <Container>
       <StrictMode>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <Router />
       </StrictMode>
     </Container>
   </MantineProvider>

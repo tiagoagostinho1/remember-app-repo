@@ -1,14 +1,10 @@
 import {
-  HoverCard,
   Group,
   Button,
   UnstyledButton,
   Text,
-  SimpleGrid,
   ThemeIcon,
-  Anchor,
   Divider,
-  Center,
   Box,
   Burger,
   Drawer,
@@ -16,7 +12,6 @@ import {
   ScrollArea,
   rem,
   useMantineTheme,
-  AppShell,
 } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
@@ -27,10 +22,9 @@ import {
   IconChartPie3,
   IconFingerprint,
   IconCoin,
-  IconChevronDown,
 } from "@tabler/icons-react";
 import classes from "./HeaderMegaMenu.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const mockdata = [
   {
@@ -66,12 +60,12 @@ const mockdata = [
 ];
 
 export function HeaderMegaMenu() {
-  const navigate = useNavigate();
-
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const theme = useMantineTheme();
+
+  const navigate = useNavigate();
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -103,8 +97,8 @@ export function HeaderMegaMenu() {
             <a href="/" className={classes.link}>
               Home
             </a>
-            <a href="/login" className={classes.link}>
-              Login
+            <a href="/remember" className={classes.link}>
+              Remember
             </a>
             {/*
             <a href="#" className={classes.link}>
@@ -112,12 +106,14 @@ export function HeaderMegaMenu() {
             </a>
             */}
           </Group>
-
           <Group visibleFrom="sm">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Link to="login">
+              <Button variant="default">Log in</Button>
+            </Link>
+            <Link to="signup">
+              <Button>Sign up</Button>
+            </Link>
           </Group>
-
           <Burger
             opened={drawerOpened}
             onClick={toggleDrawer}
@@ -137,7 +133,6 @@ export function HeaderMegaMenu() {
       >
         <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
           <Divider my="sm" />
-
           <a href="/" className={classes.link}>
             Home
           </a>
@@ -147,7 +142,15 @@ export function HeaderMegaMenu() {
           </a>
           <Divider my="sm" />
           <Group justify="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
+            <Button
+              variant="default"
+              onClick={(e) => {
+                console.log("login");
+                navigate("/login");
+              }}
+            >
+              Log in
+            </Button>
             <Button>Sign up</Button>
           </Group>
         </ScrollArea>
