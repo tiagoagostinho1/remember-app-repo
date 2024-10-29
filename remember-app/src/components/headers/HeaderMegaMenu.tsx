@@ -1,25 +1,21 @@
 import {
   Group,
-  Button,
   Divider,
   Box,
   Burger,
   Drawer,
   ScrollArea,
   rem,
-  Text,
-  ActionIcon,
 } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./HeaderMegaMenu.module.css";
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import { IconLogout } from "@tabler/icons-react";
+
+import { UserInfo } from "./UserInfo";
 
 export function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  const { login, register, isAuthenticated, user, logout } = useKindeAuth();
 
   return (
     <Box>
@@ -35,28 +31,7 @@ export function HeaderMegaMenu() {
             </a>
           </Group>
 
-          {isAuthenticated && (
-            <Group visibleFrom="sm">
-              <Text>{`${user?.given_name} ${user?.family_name}`}</Text>
-              <ActionIcon
-                onClick={logout}
-                variant="default"
-                size="sm"
-                aria-label="Logout"
-              >
-                <IconLogout />
-              </ActionIcon>
-            </Group>
-          )}
-
-          {!isAuthenticated && (
-            <Group visibleFrom="sm">
-              <Button variant="default" onClick={() => login()}>
-                Log in
-              </Button>
-              <Button onClick={() => register()}>Sign up</Button>
-            </Group>
-          )}
+          <UserInfo />
 
           <Burger
             opened={drawerOpened}
@@ -84,12 +59,7 @@ export function HeaderMegaMenu() {
             Remember
           </a>
           <Divider my="sm" />
-          <Group justify="center" grow pb="xl" px="md">
-            <Button variant="default" onClick={() => login()}>
-              Log in
-            </Button>
-            <Button onClick={() => register()}>Sign up</Button>
-          </Group>
+          <UserInfo />
         </ScrollArea>
       </Drawer>
     </Box>
