@@ -5,6 +5,7 @@ import { useForm } from "@mantine/form";
 import { IconArrowRight } from "@tabler/icons-react";
 import "@mantine/dates/styles.css";
 import "@mantine/core/styles.css";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 
 type Memory = {
   code: string;
@@ -19,8 +20,8 @@ export function RememberForm() {
     mode: "controlled",
     initialValues: { code: "", title: "", date: new Date() },
   });
-
-  const onFormSubmit = function (formSubmittedValues: Memory) {
+  const { getToken } = useKindeAuth();
+  const onFormSubmit = async function (formSubmittedValues: Memory) {
     //e.preventDefault();
     console.log(formSubmittedValues);
 
@@ -31,16 +32,20 @@ export function RememberForm() {
     };
 
     items.push(mem);
-    fetch(
-      "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
-      {
-        method: "POST",
-        body: JSON.stringify(mem),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }
-    );
+    try {
+      const accessToken = await getToken();
+      console.log(accessToken);
+      fetch(
+        "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
+        {
+          method: "POST",
+          body: JSON.stringify(mem),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+    } catch (error) {}
   };
 
   useEffect(() => {
