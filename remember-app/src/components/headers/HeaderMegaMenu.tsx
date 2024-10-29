@@ -51,10 +51,10 @@ export function HeaderMegaMenu() {
 
           {!isAuthenticated && (
             <Group visibleFrom="sm">
-              <Button variant="default" onClick={login}>
+              <Button variant="default" onClick={() => login()}>
                 Log in
               </Button>
-              <Button onClick={register}>Sign up</Button>
+              <Button onClick={() => register()}>Sign up</Button>
             </Group>
           )}
 
@@ -85,10 +85,10 @@ export function HeaderMegaMenu() {
           </a>
           <Divider my="sm" />
           <Group justify="center" grow pb="xl" px="md">
-            <Button variant="default" onClick={login}>
+            <Button variant="default" onClick={() => login()}>
               Log in
             </Button>
-            <Button onClick={register}>Sign up</Button>
+            <Button onClick={() => register()}>Sign up</Button>
           </Group>
         </ScrollArea>
       </Drawer>
