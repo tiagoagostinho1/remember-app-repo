@@ -33,8 +33,10 @@ export function RememberForm() {
 
     items.push(mem);
     try {
+      /*
       const accessToken = await getToken();
       console.log(accessToken);
+      */
       fetch(
         "https://paytently-dev.outsystemsenterprise.com/Tiago_Memoir_API/rest/Memoir/Memory",
         {
