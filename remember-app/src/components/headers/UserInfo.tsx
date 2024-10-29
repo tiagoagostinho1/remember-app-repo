@@ -3,11 +3,12 @@ import { IconLogout } from "@tabler/icons-react";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 
 export function UserInfo() {
-  const { login, register, isAuthenticated, user, logout } = useKindeAuth();
+  const { login, register, logout, isAuthenticated, user, isLoading } =
+    useKindeAuth();
 
   return (
     <>
-      {isAuthenticated && (
+      {isAuthenticated && !isLoading && (
         <Group visibleFrom="sm">
           <Text>{`${user?.given_name} ${user?.family_name}`}</Text>
           <ActionIcon
@@ -21,7 +22,7 @@ export function UserInfo() {
         </Group>
       )}
 
-      {!isAuthenticated && (
+      {!isAuthenticated && !isLoading && (
         <Group visibleFrom="sm">
           <Button variant="default" onClick={() => login()}>
             Log in
