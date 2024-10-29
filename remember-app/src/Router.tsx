@@ -1,8 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./pages/Login.page";
-import { SignUp } from "./pages/SignUp.page";
 import { RememberForm } from "./components/RememberForm";
 import { App } from "./App";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -10,16 +9,13 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/remember",
-        element: <RememberForm />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/signup",
-        element: <SignUp />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/remember",
+            element: <RememberForm />,
+          },
+        ],
       },
     ],
   },

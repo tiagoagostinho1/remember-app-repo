@@ -1,92 +1,25 @@
 import {
   Group,
   Button,
-  UnstyledButton,
-  Text,
-  ThemeIcon,
   Divider,
   Box,
   Burger,
   Drawer,
-  Collapse,
   ScrollArea,
   rem,
-  useMantineTheme,
+  Text,
+  ActionIcon,
 } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconNotification,
-  IconCode,
-  IconBook,
-  IconChartPie3,
-  IconFingerprint,
-  IconCoin,
-} from "@tabler/icons-react";
 import classes from "./HeaderMegaMenu.module.css";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-
-const mockdata = [
-  {
-    icon: IconCode,
-    title: "Open source",
-    description: "This Pokémon’s cry is very loud and distracting",
-  },
-  {
-    icon: IconCoin,
-    title: "Free for everyone",
-    description: "The fluid of Smeargle’s tail secretions changes",
-  },
-  {
-    icon: IconBook,
-    title: "Documentation",
-    description: "Yanma is capable of seeing 360 degrees without",
-  },
-  {
-    icon: IconFingerprint,
-    title: "Security",
-    description: "The shell’s rounded shape and the grooves on its.",
-  },
-  {
-    icon: IconChartPie3,
-    title: "Analytics",
-    description: "This Pokémon uses its flying ability to quickly chase",
-  },
-  {
-    icon: IconNotification,
-    title: "Notifications",
-    description: "Combusken battles with the intensely hot flames it spews",
-  },
-];
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { IconLogout } from "@tabler/icons-react";
 
 export function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const theme = useMantineTheme();
-
-  const navigate = useNavigate();
-
-  const links = mockdata.map((item) => (
-    <UnstyledButton className={classes.subLink} key={item.title}>
-      <Group wrap="nowrap" align="flex-start">
-        <ThemeIcon size={34} variant="default" radius="md">
-          <item.icon
-            style={{ width: rem(22), height: rem(22) }}
-            color={theme.colors.blue[6]}
-          />
-        </ThemeIcon>
-        <div>
-          <Text size="sm" fw={500}>
-            {item.title}
-          </Text>
-          <Text size="xs" c="dimmed">
-            {item.description}
-          </Text>
-        </div>
-      </Group>
-    </UnstyledButton>
-  ));
+  const { login, register, isAuthenticated, user, logout } = useKindeAuth();
 
   return (
     <Box>
@@ -100,20 +33,31 @@ export function HeaderMegaMenu() {
             <a href="/remember" className={classes.link}>
               Remember
             </a>
-            {/*
-            <a href="#" className={classes.link}>
-              Academy
-            </a>
-            */}
           </Group>
-          <Group visibleFrom="sm">
-            <Link to="login">
-              <Button variant="default">Log in</Button>
-            </Link>
-            <Link to="signup">
-              <Button>Sign up</Button>
-            </Link>
-          </Group>
+
+          {isAuthenticated && (
+            <Group visibleFrom="sm">
+              <Text>{`${user?.given_name} ${user?.family_name}`}</Text>
+              <ActionIcon
+                onClick={logout}
+                variant="default"
+                size="sm"
+                aria-label="Logout"
+              >
+                <IconLogout />
+              </ActionIcon>
+            </Group>
+          )}
+
+          {!isAuthenticated && (
+            <Group visibleFrom="sm">
+              <Button variant="default" onClick={login}>
+                Log in
+              </Button>
+              <Button onClick={register}>Sign up</Button>
+            </Group>
+          )}
+
           <Burger
             opened={drawerOpened}
             onClick={toggleDrawer}
@@ -136,22 +80,15 @@ export function HeaderMegaMenu() {
           <a href="/" className={classes.link}>
             Home
           </a>
-          <Collapse in={linksOpened}>{links}</Collapse>
-          <a href="/login" className={classes.link}>
-            Learn
+          <a href="/remember" className={classes.link}>
+            Remember
           </a>
           <Divider my="sm" />
           <Group justify="center" grow pb="xl" px="md">
-            <Button
-              variant="default"
-              onClick={(e) => {
-                console.log("login");
-                navigate("/login");
-              }}
-            >
+            <Button variant="default" onClick={login}>
               Log in
             </Button>
-            <Button>Sign up</Button>
+            <Button onClick={register}>Sign up</Button>
           </Group>
         </ScrollArea>
       </Drawer>
