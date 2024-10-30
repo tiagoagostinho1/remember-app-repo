@@ -8,18 +8,18 @@ import { Router } from "./Router";
 const { origin } = window?.location;
 
 createRoot(document.getElementById("root") as HTMLElement).render(
-  <KindeProvider
-    clientId="1d5ca67b5be54e758b33e9e78e327991"
-    domain="https://agostinho.kinde.com"
-    redirectUri={origin}
-    logoutUri={origin}
-  >
-    <MantineProvider theme={theme}>
-      <Container>
-        <StrictMode>
+  <MantineProvider theme={theme}>
+    <Container>
+      <StrictMode>
+        <KindeProvider
+          clientId="1d5ca67b5be54e758b33e9e78e327991"
+          domain="https://agostinho.kinde.com"
+          redirectUri={origin}
+          logoutUri={origin}
+        >
           <Router />
-        </StrictMode>
-      </Container>
-    </MantineProvider>
-  </KindeProvider>
+        </KindeProvider>
+      </StrictMode>
+    </Container>
+  </MantineProvider>
 );
