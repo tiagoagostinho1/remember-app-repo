@@ -3,9 +3,10 @@ import { Textarea, Button, Group, List } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconArrowRight } from "@tabler/icons-react";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+
 import "@mantine/dates/styles.css";
 import "@mantine/core/styles.css";
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 
 type Memory = {
   code: string;
@@ -20,6 +21,7 @@ export function RememberForm() {
     mode: "controlled",
     initialValues: { code: "", title: "", date: new Date() },
   });
+
   const { getToken } = useKindeAuth();
   const onFormSubmit = async function (formSubmittedValues: Memory) {
     //e.preventDefault();
