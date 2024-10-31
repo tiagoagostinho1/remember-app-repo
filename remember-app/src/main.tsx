@@ -9,17 +9,17 @@ const { origin } = window?.location;
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <MantineProvider theme={theme}>
-    <KindeProvider
-      clientId={import.meta.env.VITE_KINDE_CLIENT_ID}
-      domain={import.meta.env.VITE_KINDE_DOMAIN}
-      redirectUri={origin}
-      logoutUri={origin}
-    >
-      <Container>
-        <StrictMode>
+    <Container>
+      <StrictMode>
+        <KindeProvider
+          clientId={import.meta.env.VITE_KINDE_CLIENT_ID}
+          domain={import.meta.env.VITE_KINDE_DOMAIN}
+          redirectUri={origin}
+          logoutUri={origin}
+        >
           <Router />
-        </StrictMode>
-      </Container>
-    </KindeProvider>
+        </KindeProvider>
+      </StrictMode>
+    </Container>
   </MantineProvider>
 );
