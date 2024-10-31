@@ -9,17 +9,17 @@ const { origin } = window?.location;
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <MantineProvider theme={theme}>
-    <Container>
-      <StrictMode>
-        <KindeProvider
-          clientId="1d5ca67b5be54e758b33e9e78e327991"
-          domain="https://agostinho.kinde.com"
-          redirectUri={origin}
-          logoutUri={origin}
-        >
+    <KindeProvider
+      clientId={import.meta.env.VITE_KINDE_CLIENT_ID}
+      domain={import.meta.env.VITE_KINDE_DOMAIN}
+      redirectUri={origin}
+      logoutUri={origin}
+    >
+      <Container>
+        <StrictMode>
           <Router />
-        </KindeProvider>
-      </StrictMode>
-    </Container>
+        </StrictMode>
+      </Container>
+    </KindeProvider>
   </MantineProvider>
 );
