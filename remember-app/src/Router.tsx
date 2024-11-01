@@ -1,19 +1,19 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { RememberForm } from "./components/RememberForm";
-import { App } from "./App";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Home } from "./pages/Home.page";
+import { Remember } from "./pages/Remember.page";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Home />,
     children: [
       {
         element: <ProtectedRoute />,
         children: [
           {
             path: "/remember",
-            element: <RememberForm />,
+            element: <Remember />,
           },
         ],
       },
